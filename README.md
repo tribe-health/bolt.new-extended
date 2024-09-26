@@ -29,17 +29,10 @@ pnpm install
 ANTHROPIC_API_KEY=XXX
 ```
 
-Optionally, you an set the debug level or disable authentication:
+Optionally, you an set the debug level:
 
 ```
 VITE_LOG_LEVEL=debug
-VITE_DISABLE_AUTH=1
-```
-
-If you want to run authentication against a local StackBlitz instance, add:
-
-```
-VITE_CLIENT_ORIGIN=https://local.stackblitz.com:3000
 ```
 
 **Important**: Never commit your `.env.local` file to version control. It's already included in .gitignore.
@@ -71,13 +64,13 @@ Run the test suite with:
 
 ```bash
 pnpm test
+```
 
 ## Deployment
 
 To deploy the application to Cloudflare Pages:
 
 ```bash
-pnpm run deploy
 ```
 
 Make sure you have the necessary permissions and Wrangler is correctly configured for your Cloudflare account.
