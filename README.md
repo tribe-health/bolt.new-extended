@@ -22,7 +22,7 @@ A feature-rich fork of [bolt.new](https://github.com/stackblitz/bolt.new) that e
   - Fixed file editor scrollbar functionality
   - Intelligent error detection with one-click fixes via toast notifications
   - Project export as ZIP
-  - Direct GitHub project publishing
+  - Direct GitHub project publishing with auto-generated README
 
 ## Feature Status
 
@@ -33,6 +33,7 @@ A feature-rich fork of [bolt.new](https://github.com/stackblitz/bolt.new) that e
 - [x] Smart error detection and fix suggestions
 - [x] Project export as ZIP
 - [x] GitHub project publishing
+- [x] Auto-generated README for GitHub projects
 
 ### Planned Features 🚧
 - [ ] Improved prompts for consistent WebContainer triggering across LLMs
@@ -70,7 +71,7 @@ For developers interested in building their own AI-powered development tools wit
 
 Here are some tips to get the most out of Bolt.new:
 
-- **Be specific about your stack**: If you want to use specific frameworks or libraries (like Astro, Tailwind, ShadCN, or any other popular JavaScript framework), mention them in your initial prompt to ensure Bolt scaffolds the project accordingly.
+
 - **Use the enhance prompt icon**: Before sending your prompt, try clicking the 'enhance' icon to have the AI model help you refine your prompt, then edit the results before submitting.
 
 - **Scaffold the basics first, then add features**: Make sure the basic structure of your application is in place before diving into more advanced functionality. This helps Bolt understand the foundation of your project and ensure everything is wired up right before building out more advanced functionality.
