@@ -1,101 +1,224 @@
-[![Bolt.new: AI-Powered Full-Stack Web Development in the Browser](./public/social_preview_index.jpg)](https://bolt.new)
+# Bolt Application
 
-# Bolt.new Fork for Extended Features
+## Deployment Methods
 
-A feature-rich fork of [bolt.new](https://github.com/stackblitz/bolt.new) that extends the original project with multiple LLM integrations and enhanced development capabilities. Build, deploy, and debug full-stack web applications through an intuitive chat interface powered by various AI providers.
+This project supports two deployment methods: Direct GitHub Actions deployment and GitOps with ArgoCD. Below is a comparison of both approaches:
 
-## Key Features
+### Direct Deployment (GitHub Actions)
 
-- **Multi-LLM Support**: Interact with your choice of AI providers including:
-  - OpenAI
-  - Google Generative AI (Gemini)
-  - Mistral
-  - Groq
-  - OpenRouter
-  - DeepSeek
-  - Together AI
-  - Ollama
-  - LMStudio
+Pros:
+- Immediate deployment feedback
+- Simpler setup for small projects
+- Direct control over deployment process
+- Easier debugging of deployment issues
+- Better suited for development and testing environments
 
-- **Enhanced Development Experience**:
-  - File/Image upload support in chat interface
-  - Fixed file editor scrollbar functionality
-  - Intelligent error detection with one-click fixes via toast notifications
-  - Project export as ZIP
-  - Direct GitHub project publishing with auto-generated README
+Cons:
+- Less scalable for multiple environments
+- Manual intervention needed for rollbacks
+- State management can be challenging
+- Security policies harder to enforce consistently
+- No automatic drift detection
 
-## Feature Status
+Best for:
+- Development environments
+- Small teams
+- Quick iterations
+- Testing new features
+- Projects with simple deployment needs
 
-### Added Features ✅
-- [x] Multi-LLM provider support
-- [x] File/Image upload capability in chat
-- [x] Fixed file editor scrollbar functionality
-- [x] Smart error detection and fix suggestions
-- [x] Project export as ZIP
-- [x] GitHub project publishing
-- [x] Auto-generated README for GitHub projects
+### GitOps Deployment (ArgoCD)
 
-### Planned Features 🚧
-- [ ] Improved prompts for consistent WebContainer triggering across LLMs
-- [ ] Project templates support
-- [ ] Project import functionality
-- [ ] Deployment integrations:
-  - [ ] Vercel
-  - [ ] Netlify
-  - [ ] Heroku
-- [ ] Additional language support (PHP, etc.)
-- [ ] Per-chat deployment parameter persistence
+Pros:
+- Declarative configuration
+- Automatic drift detection and reconciliation
+- Better security through pull-based model
+- Easy rollbacks and version control
+- Better audit trail
+- Cluster state always matches git repository
+- Scalable across multiple clusters and environments
 
-# Bolt.new: AI-Powered Full-Stack Web Development in the Browser
+Cons:
+- More complex initial setup
+- Requires additional cluster resources
+- Learning curve for team members
+- May require changes to existing workflows
+- Slower feedback loop for deployments
 
-Bolt.new is an AI-powered web development agent that allows you to prompt, run, edit, and deploy full-stack applications directly from your browser—no local setup required. If you're here to build your own AI-powered web dev agent using the Bolt open source codebase, [click here to get started!](./CONTRIBUTING.md)
+Best for:
+- Production environments
+- Multiple clusters/environments
+- Large teams
+- Compliance requirements
+- Complex deployment scenarios
 
-## What Makes Bolt.new Different
+## Deployment Setup
 
-Claude, v0, etc are incredible- but you can't install packages, run backends or edit code. That's where Bolt.new stands out:
+### Prerequisites
 
-- **Full-Stack in the Browser**: Bolt.new integrates cutting-edge AI models with an in-browser development environment powered by **StackBlitz's WebContainers**. This allows you to:
-  - Install and run npm tools and libraries (like Vite, Next.js, and more)
-  - Run Node.js servers
-  - Interact with third-party APIs
-  - Deploy to production from chat
-  - Share your work via a URL
+- Azure Kubernetes Service (AKS) cluster
+- Azure Container Registry (ACR)
+- GitHub repository
+- TLS certificates for domain
+- NGINX Ingress Controller installed on the cluster
+- ArgoCD installed on the cluster
 
-- **AI with Environment Control**: Unlike traditional dev environments where the AI can only assist in code generation, Bolt.new gives AI models **complete control** over the entire  environment including the filesystem, node server, package manager, terminal, and browser console. This empowers AI agents to handle the entire app lifecycle—from creation to deployment.
+### GitHub Actions Deployment
 
-Whether you're an experienced developer, a PM or designer, Bolt.new allows you to build production-grade full-stack applications with ease.
+#### Repository Secrets
 
-For developers interested in building their own AI-powered development tools with WebContainers, check out the open-source Bolt codebase in this repo!
+The following secrets need to be configured in your GitHub repository:
 
-## Tips and Tricks
+```bash
+DOCKERHUB_USERNAME
+ARM_CLIENT_ID
+ARM_CLIENT_SECRET
+ARM_SUBSCRIPTION_ID
+ARM_TENANT_ID
+TLS_CRT
+TLS_KEY
+```
 
-Here are some tips to get the most out of Bolt.new:
+#### Repository Variables
 
+The following variables need to be configured:
 
-- **Use the enhance prompt icon**: Before sending your prompt, try clicking the 'enhance' icon to have the AI model help you refine your prompt, then edit the results before submitting.
+```bash
+LOCATION
+RESOURCE_GROUP_NAME
+CLUSTER_NAME
+KUBERNETES_NAMESPACE
+TLS_SECRET_NAME
+DOCKER_IMAGE_NAME
+```
 
-- **Scaffold the basics first, then add features**: Make sure the basic structure of your application is in place before diving into more advanced functionality. This helps Bolt understand the foundation of your project and ensure everything is wired up right before building out more advanced functionality.
+### ArgoCD Setup
 
-- **Batch simple instructions**: Save time by combining simple instructions into one message. For example, you can ask Bolt to change the color scheme, add mobile responsiveness, and restart the dev server, all in one go saving you time and reducing API credit consumption significantly.
+1. Apply the ArgoCD configuration:
+```bash
+kubectl apply -f argocd/application.yaml
+```
 
-## FAQs
+2. Verify the application is synced:
+```bash
+argocd app get bolt
+argocd app sync bolt
+```
 
-**Where do I sign up for a paid plan?**  
-Bolt.new is free to get started. If you need more AI tokens or want private projects, you can purchase a paid subscription in your [Bolt.new](https://bolt.new) settings, in the lower-left hand corner of the application. 
+3. Monitor sync status:
+```bash
+argocd app list
+argocd app logs bolt
+```
 
-**What happens if I hit the free usage limit?**  
-Once your free daily token limit is reached, AI interactions are paused until the next day or until you upgrade your plan.
+### Choosing Between Deployment Methods
 
-**Is Bolt in beta?**  
-Yes, Bolt.new is in beta, and we are actively improving it based on feedback.
+1. Use GitHub Actions Direct Deployment when:
+   - Developing new features (features/azure branch)
+   - Need immediate feedback on deployments
+   - Testing configuration changes
+   - Working in development environments
 
-**How can I report Bolt.new issues?**  
-Check out the [Issues section](https://github.com/stackblitz/bolt.new/issues) to report an issue or request a new feature. Please use the search feature to check if someone else has already submitted the same issue/request.
+2. Use ArgoCD when:
+   - Deploying to production
+   - Managing multiple environments
+   - Need automated drift detection
+   - Require strict governance
+   - Want automated reconciliation
 
-**What frameworks/libraries currently work on Bolt?**  
-Bolt.new supports most popular JavaScript frameworks and libraries. If it runs on StackBlitz, it will run on Bolt.new as well.
+### Hybrid Approach
 
-**How can I add make sure my framework/project works well in bolt?**  
-We are excited to work with the JavaScript ecosystem to improve functionality in Bolt. Reach out to us via [hello@stackblitz.com](mailto:hello@stackblitz.com) to discuss how we can partner!
+You can use both methods together:
+1. GitHub Actions for:
+   - Building and pushing Docker images
+   - Running tests
+   - Creating necessary secrets
+   - Development deployments
 
-<!-- Updated repository with security fixes -->
+2. ArgoCD for:
+   - Production deployments
+   - Configuration management
+   - Drift detection
+   - Environment consistency
+
+## Ingress Configuration
+
+The application uses a secure ingress that:
+- Forces SSL/TLS encryption
+- Only accepts traffic for configured domain
+- Uses TLSv1.2 and TLSv1.3
+- Includes optimized proxy settings
+
+Key ingress features:
+```yaml
+annotations:
+  kubernetes.io/ingress.class: "nginx"
+  nginx.ingress.kubernetes.io/ssl-redirect: "true"
+  nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+  nginx.ingress.kubernetes.io/ssl-protocols: "TLSv1.2 TLSv1.3"
+```
+
+## Monitoring and Troubleshooting
+
+### GitHub Actions Deployment
+
+```bash
+# Check deployment status
+kubectl get deployment -n ${KUBERNETES_NAMESPACE}
+kubectl describe deployment bolt-app -n ${KUBERNETES_NAMESPACE}
+
+# Check pods
+kubectl get pods -n ${KUBERNETES_NAMESPACE}
+kubectl logs -l app=bolt -n ${KUBERNETES_NAMESPACE}
+```
+
+### ArgoCD Deployment
+
+```bash
+# Check ArgoCD application status
+argocd app get bolt
+argocd app logs bolt
+
+# Check sync status
+argocd app list
+argocd app sync bolt --dry-run
+
+# Debug sync issues
+argocd app diff bolt
+argocd app terminate-op bolt
+```
+
+### General Troubleshooting
+
+1. Check pod status:
+```bash
+kubectl get pods -n ${KUBERNETES_NAMESPACE}
+kubectl describe pod <pod-name> -n ${KUBERNETES_NAMESPACE}
+```
+
+2. Check ingress status:
+```bash
+kubectl get ingress -n ${KUBERNETES_NAMESPACE}
+kubectl describe ingress bolt-ingress -n ${KUBERNETES_NAMESPACE}
+```
+
+3. Check TLS secret:
+```bash
+kubectl get secret ${TLS_SECRET_NAME} -n ${KUBERNETES_NAMESPACE}
+kubectl describe secret ${TLS_SECRET_NAME} -n ${KUBERNETES_NAMESPACE}
+```
+
+4. Verify NGINX Ingress Controller:
+```bash
+kubectl get pods -n ingress-nginx
+kubectl logs -n ingress-nginx -l app.kubernetes.io/name=ingress-nginx
+```
+
+## Security Notes
+
+- All HTTP traffic is automatically redirected to HTTPS
+- Only TLSv1.2 and TLSv1.3 are allowed
+- Only requests to configured domain are accepted
+- Invalid hostnames return 404
+- SSL certificates are managed through Kubernetes secrets
+- ArgoCD provides additional security through pull-based model
