@@ -59,7 +59,7 @@ Best for:
 - Azure Kubernetes Service (AKS) cluster
 - Azure Container Registry (ACR)
 - GitHub repository
-- TLS certificates for domain
+- TLS certificates for *.tribemedia.io domain
 - NGINX Ingress Controller installed on the cluster
 - ArgoCD installed on the cluster
 
@@ -67,7 +67,7 @@ Best for:
 
 #### Repository Secrets
 
-The following secrets need to be configured in your GitHub repository:
+Add the following secrets to your GitHub repository:
 
 ```bash
 DOCKERHUB_USERNAME
@@ -81,15 +81,14 @@ TLS_KEY
 
 #### Repository Variables
 
-The following variables need to be configured:
+Add the following variables:
 
 ```bash
-LOCATION
-RESOURCE_GROUP_NAME
-CLUSTER_NAME
-KUBERNETES_NAMESPACE
-TLS_SECRET_NAME
-DOCKER_IMAGE_NAME
+LOCATION=eastus
+RESOURCE_GROUP_NAME=reveles-main-rg
+CLUSTER_NAME=reveles-main
+KUBERNETES_NAMESPACE=bolt
+TLS_SECRET_NAME=bolt-tls-secret
 ```
 
 ### ArgoCD Setup
@@ -145,7 +144,7 @@ You can use both methods together:
 
 The application uses a secure ingress that:
 - Forces SSL/TLS encryption
-- Only accepts traffic for configured domain
+- Only accepts traffic for bolt.tribemedia.io
 - Uses TLSv1.2 and TLSv1.3
 - Includes optimized proxy settings
 
@@ -164,12 +163,12 @@ annotations:
 
 ```bash
 # Check deployment status
-kubectl get deployment -n ${KUBERNETES_NAMESPACE}
-kubectl describe deployment bolt-app -n ${KUBERNETES_NAMESPACE}
+kubectl get deployment -n bolt
+kubectl describe deployment bolt-app -n bolt
 
 # Check pods
-kubectl get pods -n ${KUBERNETES_NAMESPACE}
-kubectl logs -l app=bolt -n ${KUBERNETES_NAMESPACE}
+kubectl get pods -n bolt
+kubectl logs -l app=bolt -n bolt
 ```
 
 ### ArgoCD Deployment
@@ -192,20 +191,20 @@ argocd app terminate-op bolt
 
 1. Check pod status:
 ```bash
-kubectl get pods -n ${KUBERNETES_NAMESPACE}
-kubectl describe pod <pod-name> -n ${KUBERNETES_NAMESPACE}
+kubectl get pods -n bolt
+kubectl describe pod <pod-name> -n bolt
 ```
 
 2. Check ingress status:
 ```bash
-kubectl get ingress -n ${KUBERNETES_NAMESPACE}
-kubectl describe ingress bolt-ingress -n ${KUBERNETES_NAMESPACE}
+kubectl get ingress -n bolt
+kubectl describe ingress bolt-ingress -n bolt
 ```
 
 3. Check TLS secret:
 ```bash
-kubectl get secret ${TLS_SECRET_NAME} -n ${KUBERNETES_NAMESPACE}
-kubectl describe secret ${TLS_SECRET_NAME} -n ${KUBERNETES_NAMESPACE}
+kubectl get secret ${TLS_SECRET_NAME} -n bolt
+kubectl describe secret ${TLS_SECRET_NAME} -n bolt
 ```
 
 4. Verify NGINX Ingress Controller:
@@ -214,11 +213,16 @@ kubectl get pods -n ingress-nginx
 kubectl logs -n ingress-nginx -l app.kubernetes.io/name=ingress-nginx
 ```
 
+5. Test SSL Configuration:
+```bash
+curl -v -k https://bolt.tribemedia.io
+```
+
 ## Security Notes
 
 - All HTTP traffic is automatically redirected to HTTPS
 - Only TLSv1.2 and TLSv1.3 are allowed
-- Only requests to configured domain are accepted
+- Only requests to bolt.tribemedia.io are accepted
 - Invalid hostnames return 404
 - SSL certificates are managed through Kubernetes secrets
 - ArgoCD provides additional security through pull-based model
