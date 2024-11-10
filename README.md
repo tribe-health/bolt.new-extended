@@ -52,9 +52,9 @@ Bolt.new is an AI-powered web development agent that allows you to prompt, run, 
 
 ## What Makes Bolt.new Different
 
-Claude, v0, etc are incredible- but you can't install packages, run backends or edit code. That’s where Bolt.new stands out:
+Claude, v0, etc are incredible- but you can't install packages, run backends or edit code. That's where Bolt.new stands out:
 
-- **Full-Stack in the Browser**: Bolt.new integrates cutting-edge AI models with an in-browser development environment powered by **StackBlitz’s WebContainers**. This allows you to:
+- **Full-Stack in the Browser**: Bolt.new integrates cutting-edge AI models with an in-browser development environment powered by **StackBlitz's WebContainers**. This allows you to:
   - Install and run npm tools and libraries (like Vite, Next.js, and more)
   - Run Node.js servers
   - Interact with third-party APIs
@@ -63,7 +63,7 @@ Claude, v0, etc are incredible- but you can't install packages, run backends or 
 
 - **AI with Environment Control**: Unlike traditional dev environments where the AI can only assist in code generation, Bolt.new gives AI models **complete control** over the entire  environment including the filesystem, node server, package manager, terminal, and browser console. This empowers AI agents to handle the entire app lifecycle—from creation to deployment.
 
-Whether you’re an experienced developer, a PM or designer, Bolt.new allows you to build production-grade full-stack applications with ease.
+Whether you're an experienced developer, a PM or designer, Bolt.new allows you to build production-grade full-stack applications with ease.
 
 For developers interested in building their own AI-powered development tools with WebContainers, check out the open-source Bolt codebase in this repo!
 
@@ -97,3 +97,5 @@ Bolt.new supports most popular JavaScript frameworks and libraries. If it runs o
 
 **How can I add make sure my framework/project works well in bolt?**  
 We are excited to work with the JavaScript ecosystem to improve functionality in Bolt. Reach out to us via [hello@stackblitz.com](mailto:hello@stackblitz.com) to discuss how we can partner!
+
+<!-- Updated repository with security fixes -->
